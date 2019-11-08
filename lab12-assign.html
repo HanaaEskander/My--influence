@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+table {
+    margin-top: 10px;
+    margin-left: 10px;
+    border: #ad6a6a solid 5px;
+    font-size: 20px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+table th {
+    border: #ad6a6a solid 2px;
+    padding: 10px 10px;
+    color: black;
+}
+
+table tr {
+    border: #ad6a6a solid 2px;  
+    color: black;
+}
+table td {
+    border: #ad6a6a solid 2px;    
+    color: black;
+}
+
+</style>
+<body>
+    <div><h1>Get Posts </h1><br>
+        
+        <input type="button" id="refesh" value="Refresh" onclick="getPost();">
+        <table id="data">
+        <tr> 
+            <th>userid</th>
+            <th>id</th>
+            <th>title</th>
+            <th>body</th>
+        </tr>
+       </table>
+
+    </div>
+       <div><h1>Add Posts To Table </h1>
+
+        <input type="text" id="text1" placeholder="userid"></input>
+        <input type="text" id="text2" placeholder="title"></input>
+        <input type="text" id="text3" placeholder="body"></input>
+        <input type="button" id="add" value="Add Data" onclick="addPost();"></input>
+        <span id="addErr"></span>
+
+    </div>
+    <div><h1>Edit Post </h1>
+        <input type="text" id="text4" placeholder="userid"></input>
+        <input type="text" id="text5" placeholder="id"></input>
+        <input type="text" id="text6" placeholder="title"></input>
+        <input type="text" id="text7" placeholder="body"></input>
+        <input type="button" id="edit" value="Edit Data" onclick="editPost();"></input>  
+        <span id="editErr"></span>
+    </div>
+</body>
+</html>
+<script>
+
+let table = document.getElementById("data");
+let refesh = document.getElementById("refresh");
+let add = document.getElementById("add");
+let edit = document.getElementById("edit");
+let addErr = document.getElementById("addErr");
+let editErr = document.getElementById("editErr");
+let user1 = document.getElementById("text1").value;
+let title1 = document.getElementById("text2").value;
+let body1 = document.getElementById("text3").value;
+let id2 = document.getElementById("text4").value;
+let user2 = document.getElementById("text5").value;
+let title2 = document.getElementById("text6").value;
+let body2 = document.getElementById("text7").value;
+
+ function getPost(){
+    fetch('https://jsonplaceholder.typicode.com/posts')
+  .then(response => response.json())
+  .then(json =>{   
+    for(let i=0;i<=json.length;i++){
+        let td0 = document.createElement("td");
+        let td1 = document.createElement("td");
+        let td2 = document.createElement("td");
+        let td3 = document.createElement("td");
+        let tr = document.createElement("tr");
+        td0.textContent = json[i].userId;
+        td1.textContent = json[i].id;
+        td2.textContent = json[i].title;
+        td3.textContent = json[i].body;
+        tr.appendChild(td0);
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        tr.appendChild(td3);
+        table.appendChild(tr);
+  }
+  })
+ }
+ function addPost(){
+    fetch('https://jsonplaceholder.typicode.com/posts', {
+    method: 'POST',
+    body: JSON.stringify({
+       "body": body1,
+       "title": title1,
+       "userId": user1
+    }),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8"
+    }
+  })
+  .then(response => response.json())
+  .then(json =>{  
+    let user1 = document.getElementById("text1").value;
+    let title1 = document.getElementById("text2").value;
+    let body1 = document.getElementById("text3").value;
+        let td0 = document.createElement("td");
+        let td1 = document.createElement("td");
+        let td2 = document.createElement("td");
+        let td3 = document.createElement("td");
+        let tr = document.createElement("tr");
+        td0.textContent = user1;
+        td1.textContent = " ";
+        td2.textContent = title1;
+        td3.textContent = body1;
+        tr.appendChild(td0);
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        tr.appendChild(td3);
+        table.appendChild(tr);
+        //errorMessage();
+        addErr.innerHTML = "You did it ^^ Adding new post succeeded";
+        addErr.style.color = "green";
+  
+  }) 
+  .catch(error =>
+  {
+    addErr.innerHTML = "You did it wa la tazal lkn ^^ There was an error";
+    addErr.style.color = "red";
+  });
+
+
+ }
+ function editPost(){
+    fetch('https://jsonplaceholder.typicode.com/posts/', {
+    method: 'PUT',
+    body: JSON.stringify({
+      "body": body2,
+      "title": title2,
+      "userId": user2,
+      "id":id2
+    }),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8"
+    }
+  })
+  .then(response => response.json())
+  .then(json =>{  
+    let id2 = document.getElementById("text4").value;
+    let user2 = document.getElementById("text5").value;
+    let title2 = document.getElementById("text6").value;
+    let body2 = document.getElementById("text7").value; 
+        let td0 = document.createElement("td");
+        let td1 = document.createElement("td");
+        let td2 = document.createElement("td");
+        let td3 = document.createElement("td");
+        let tr = document.createElement("tr");
+        td1.textContent = user2;
+        td0.textContent = id2;
+        td2.textContent = title2;
+        td3.textContent = body2;
+        tr.appendChild(td0);
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        tr.appendChild(td3);
+        table.appendChild(tr);
+        editErr.innerHTML = `You did it ^^ Changed data of ${id2} successfully`;
+        editErr.style.color = "green";
+  //       for(let i=0;i<=json.length;i++){
+  //       let td0 = document.createElement("td");
+  //       let td1 = document.createElement("td");
+  //       let td2 = document.createElement("td");
+  //       let td3 = document.createElement("td");
+  //       let tr = document.createElement("tr");
+  //       if(user2==json[i].userId)
+  //       td0.textContent = user2;
+  //       if(id2==json[i].id)
+  //       td1.textContent = id2;
+  //       if(title2==json[i].title)
+  //       td2.textContent = title2;
+  //       if(body2==json[i].body)
+  //       td3.textContent = body2;
+  //       tr.appendChild(td0);
+  //       tr.appendChild(td1);
+  //       tr.appendChild(td2);
+  //       tr.appendChild(td3);
+  //       table.appendChild(tr);
+  // }
+  }) 
+  .catch(error =>
+  {
+    editErr.innerHTML = `You did it wa la tazal lkn ^^ Changing data of ${id2}  was not successful`;
+    editErr.style.color = "red";
+  }); 
+ }
+
+</script>
